@@ -17,7 +17,15 @@ echo "Current build version: $versionString"
 echo "Next build version: $newVersion"
 
 echo "==================== SED Substitution ===================="
-sed -i "" "s/<string>$buildNumber<\/string>/<string>$increment<\/string>/g" ${PATH_TO_PLIST}
-sed -i "" "s/<string>${versionString}<\/string>/<string>$newVersion<\/string>/g" ${PATH_TO_PLIST}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Running darwin command"
+    sed -i "" -e "s/<string>$buildNumber<\/string>/<string>$increment<\/string>/g" $PATH_TO_PLIST
+    sed -i "" -e "s/<string>${versionString}<\/string>/<string>$newVersion<\/string>/g" $PATH_TO_PLIST
+else
+    echo "Running linux command"
+    sed -i -e "s/<string>$buildNumber<\/string>/<string>$increment<\/string>/g" $PATH_TO_PLIST
+    sed -i -e "s/<string>${versionString}<\/string>/<string>$newVersion<\/string>/g" $PATH_TO_PLIST
+fi
+
 echo "====================  IOS Completed   ===================="
 

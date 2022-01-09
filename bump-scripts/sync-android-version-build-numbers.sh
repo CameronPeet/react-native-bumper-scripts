@@ -34,9 +34,9 @@ fi
 # --- Configs:
 
 echo " (i) Provided Gradle File path: ${gradle_file}"
-echo " (i) Version Code: ${version_code}"
+echo " (i) Version Code to be set: ${version_code}"
 if ! [ -z "${version_name}" ] ; then
-  echo " (i) Version Name: ${version_name}"
+  echo " (i) Version Name to be set: ${version_name}"
 fi
 
 
@@ -51,7 +51,6 @@ fi
 echo "Version code detected: ${VERSIONCODE}"
 if [ ! -z "${version_code_offset}" ] ; then
   echo " (i) Version code offset: ${version_code_offset}"
-
   CONFIG_new_version_code=$((${version_code} + ${version_code_offset}))
 else
   CONFIG_new_version_code=${version_code}
@@ -59,21 +58,27 @@ fi
 
 echo " (i) Version code: ${CONFIG_new_version_code}"
 
-
 if [ -z "${VERSIONNAME}" ] ; then
   echo " [!] Could not find current Version Name!"
   exit 1
 fi
-echo "Version name detected: ${VERSIONNAME}"
 
-# set -v
-# ---- Set Build Version Code:
-sed -i '' "s/versionCode ${VERSIONCODE}/versionCode ${version_code}/" ${gradle_file}
 
-echo "versionName ${VERSIONNAME}"
+echo "==================== SED Substitution ===================="
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Running darwin command"
+    # ---- Set Build Version Code:
+    sed -i '' "s/versionCode ${VERSIONCODE}/versionCode ${version_code}/" ${gradle_file}
+    # ---- Set Build Version Code if it was specified:
+    sed -i "" "s/versionName ${VERSIONNAME}/versionName "\"${version_name}\""/" ${gradle_file}
 
-# ---- Set Build Version Code if it was specified:
-sed -i "" "s/versionName ${VERSIONNAME}/versionName "\"${version_name}\""/" ${gradle_file}
+else
+    echo "Running linux command"
+ # ---- Set Build Version Code:
+    sed -i -e "s/versionCode ${VERSIONCODE}/versionCode ${version_code}/" ${gradle_file}
+    # ---- Set Build Version Code if it was specified:
+    sed -i -e "s/versionName ${VERSIONNAME}/versionName "\"${version_name}\""/" ${gradle_file}
+fi
 
 
 # ---- Remove backup:

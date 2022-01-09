@@ -8,7 +8,6 @@ ls
 
 echo "==================== Bumping patch number in package.json ===================="
 # E.g npm version patch --no-git-tag-version
-# Replace with your own command to bump version in package.json
 yarn bump-patch-only
 
 
@@ -28,3 +27,5 @@ cd bump-scripts
 
 source ./xcode-build-bump.sh $PACKAGE_VERSION $PROJECT_NAME
 source ./sync-android-version-build-numbers.sh $PACKAGE_VERSION $PROJECT_NAME
+
+cd ..
